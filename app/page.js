@@ -2,18 +2,20 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import FormCard from "@/components/FormCard"
+import ImportCard from "@/components/ImportCard"
+import Image from "next/image";
 
 const salesData = [
-  { id: 1, date: '12/01/2026', product: "Printer", category: "Electronics", units: 3, price: 200 },
-  { id: 2, date: '13/01/2026', product: "Pen Pack", category: "Stationery", units: 50, price: 1 },
-  { id: 3, date: '15/01/2026', product: "Notebook", category: "Stationery", units: 20, price: 3 },
-  { id: 4, date: '17/01/2026', product: "Mouse", category: "Electronics", units: 8, price: 12 },
-  { id: 5, date: '18/01/2026', product: "Chair", category: "Furniture", units: 2, price: 60 },
-  { id: 6, date: '19/01/2026', product: "Desk", category: "Furniture", units: 1, price: 120 },
-  { id: 7, date: '19/01/2026', product: "USB Cable", category: "Electronics", units: 15, price: 4 },
-  { id: 8, date: '20/01/2026', product: "PS5 Game Pad", category: "Electronics", units: 10, price: 60},
-  { id: 9, date: '22/01/2026', product: "White Board", category: "Stationery", units: 35, price: 40},
-  { id: 10, date: '21/01/2026', product: "Office Desk", category: "Furniture", units: 3, price: 500},
+  { id: 1, date: '12-01-2026', product: "Printer", category: "Electronics", units: 3, price: 200 },
+  { id: 2, date: '13-01-2026', product: "Pen Pack", category: "Stationery", units: 50, price: 1 },
+  { id: 3, date: '15-01-2026', product: "Notebook", category: "Stationery", units: 20, price: 3 },
+  { id: 4, date: '17-01-2026', product: "Mouse", category: "Electronics", units: 8, price: 12 },
+  { id: 5, date: '18-01-2026', product: "Chair", category: "Furniture", units: 2, price: 60 },
+  { id: 6, date: '19-01-2026', product: "Desk", category: "Furniture", units: 1, price: 120 },
+  { id: 7, date: '19-01-2026', product: "USB Cable", category: "Electronics", units: 15, price: 4 },
+  { id: 8, date: '20-01-2026', product: "PS5 Game Pad", category: "Electronics", units: 10, price: 60},
+  { id: 9, date: '22-01-2026', product: "White Board", category: "Stationery", units: 35, price: 40},
+  { id: 10, date: '21-01-2026', product: "Office Desk", category: "Furniture", units: 3, price: 500},
 ];
 
 function KpiCard({ title, value, helper }) {
@@ -39,17 +41,23 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [sortByRevenue, setSortByRevenue] = useState(false);
   const [openForm, setOpenForm] = useState(false);
+  const [openImport, setOpenImport] = useState(false);
 
-   // Press "A" to open (avoid when typing)
+   // Press "A" to open form, "I" to open import (avoid when typing)
    useEffect(() => {
     const onKeyDown = (e) => {
       const tag = e.target?.tagName?.toLowerCase();
       const typing =
         tag === "input" || tag === "textarea" || e.target?.isContentEditable;
 
-      if (!typing && e.key.toLowerCase() === "a") {
-        e.preventDefault();
-        setOpenForm(true);
+      if (!typing) {
+        if (e.key.toLowerCase() === "a") {
+          e.preventDefault();
+          setOpenForm(true);
+        } else if (e.key.toLowerCase() === "i") {
+          e.preventDefault();
+          setOpenImport(true);
+        }
       }
     };
 
@@ -60,6 +68,11 @@ export default function App() {
   const handleAddRow = (newRow) => {
     // Put newest at top
     setRows((prev) => [newRow, ...prev]);
+  };
+
+  const handleImportCSV = (importedData) => {
+    // Replace all dashboard data with imported CSV data
+    setRows(importedData);
   };
 
   // filter() — apply category + search filter
@@ -103,9 +116,19 @@ export default function App() {
             <h1 className="text-3xl font-bold text-slate-900">Sales Dashboard</h1>
             <p className="text-slate-600">Mini internal tool (filter + search + KPIs).</p>
           </div>
-          <button className="btn btn-info rounded-2xl" onClick={() => setOpenForm(true)}>
-              + Add Product (A)
-          </button>
+          <div className="grid grid-cols-2 gap-x-6">
+            <button className="btn btn-info rounded-2xl" onClick={() => setOpenForm(true)}>
+               + Add Product (A)
+            </button>
+            <button 
+              className="btn btn-outline btn-accent font-semibold border border-gray-400 text-slate-800 rounded-2xl flex items-center gap-2" 
+              onClick={() => setOpenImport(true)}
+            >
+              <Image src={'/import-arrow.svg'} width={30} height={20} alt="Import"/>
+              Import CSV (I)
+            </button>
+          
+          </div>
         </div>
 
         {/* KPI Cards */}
@@ -194,6 +217,13 @@ export default function App() {
           open={openForm}
           onClose={() => setOpenForm(false)}
           onSubmit={handleAddRow}
+        />
+
+        {/* Import CSV Modal */}
+        <ImportCard
+          open={openImport}
+          onClose={() => setOpenImport(false)}
+          onImport={handleImportCSV}
         />
         {/* Revenue Breakdown */}
         <div className="mt-6 rounded-2xl border bg-white p-4 shadow-sm">

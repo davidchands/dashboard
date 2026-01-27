@@ -7,7 +7,7 @@ export default function FormCard({ open, onClose, onSubmit }) {
   const [category, setCategory] = useState("Electronics");
   const [units, setUnits] = useState(1);
   const [price, setPrice] = useState(0);
-  const [saleDate, setSaleDate] = useState(""); // "DD/MM/YYYY"
+  const [saleDate, setSaleDate] = useState(""); // "DD-MM-YYYY"
 
 
   // Close on ESC + open on "A" (only when not typing)
@@ -70,18 +70,18 @@ export default function FormCard({ open, onClose, onSubmit }) {
     // keep digits only
     const digits = value.replace(/\D/g, "").slice(0, 8); // max 8 digits
   
-    // auto add slash after 2 digits
+    // auto add dash after 2 digits
     if (digits.length <= 2) return digits;
     if (digits.length <=4) {
-        return `${digits.slice(0, 2)}/${digits.slice(2)}`
+        return `${digits.slice(0, 2)}-${digits.slice(2)}`
     }
-    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+    return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
   };
 
   const isValidDate = (value) => {
-    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(value)) return false;
+    if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) return false;
   
-    const [day, month, year] = value.split("/").map(Number);
+    const [day, month, year] = value.split("-").map(Number);
   
     if (month < 1 || month > 12) return false;
     if (day < 1 || day > 31) return false;
@@ -122,7 +122,7 @@ export default function FormCard({ open, onClose, onSubmit }) {
             <input
                 value={saleDate}
                 onChange={(e) => setSaleDate(formatDate(e.target.value))}
-                placeholder="DD/MM/YYYY"
+                placeholder="DD-MM-YYYY"
                 inputMode="numeric"
                 className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-slate-400"
             />
