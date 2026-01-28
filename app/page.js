@@ -36,7 +36,18 @@ function formatMoney(n) {
 }
 
 export default function App() {
-  const [rows, setRows] = useState(salesData);
+  const toTitleCase = (value) => {
+    const s = String(value ?? "").trim();
+    if (!s) return "";
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  };
+
+  const normalizeRow = (row) => ({
+    ...row,
+    category: toTitleCase(row.category),
+  });
+
+  const [rows, setRows] = useState(salesData.map(normalizeRow));
   const [category, setCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [sortByRevenue, setSortByRevenue] = useState(false);
@@ -67,17 +78,20 @@ export default function App() {
 
   const handleAddRow = (newRow) => {
     // Put newest at top
-    setRows((prev) => [newRow, ...prev]);
+    setRows((prev) => [normalizeRow(newRow), ...prev]);
   };
 
   const handleImportCSV = (importedData) => {
     // Replace all dashboard data with imported CSV data
-    setRows(importedData);
+    setRows(importedData.map(normalizeRow));
   };
 
   // filter() — apply category + search filter
   const filtered = rows.filter((row) => {
-    const matchesCategory = category === "All" ? true : row.category === category;
+    const matchesCategory =
+      category === "All"
+        ? true
+        : toTitleCase(row.category) === toTitleCase(category);
     const matchesSearch = row.product.toLowerCase().includes(search.toLowerCase());
     return matchesCategory && matchesSearch;
   });
@@ -107,6 +121,15 @@ export default function App() {
   // pick best category
   const bestCategory =
     Object.entries(revenueByCategory).sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
+
+  // Custom category options
+  // Keep options stable (based on ALL rows), and Title-Case labels for UX
+  const categories = [
+    "All",
+    ...Array.from(
+      new Set(rows.map((row) => toTitleCase(row.category)).filter(Boolean))
+    ).sort(),
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
@@ -145,12 +168,13 @@ export default function App() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="rounded-lg border border-slate-300 bg-white px-2 py-2 text-gray-400 text-sm"
+              className="rounded-lg border border-slate-300 bg-white px-2 py-2 text-slate-700 text-sm"
             >
-              <option value="All">All Categories</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Stationery">Stationery</option>
-              <option value="Furniture">Furniture</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
             </select>
           </div>
 

@@ -6,7 +6,7 @@ export default function FormCard({ open, onClose, onSubmit }) {
   const [product, setProduct] = useState("");
   const [category, setCategory] = useState("Electronics");
   const [units, setUnits] = useState(1);
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("0");
   const [saleDate, setSaleDate] = useState(""); // "DD-MM-YYYY"
 
 
@@ -35,7 +35,7 @@ export default function FormCard({ open, onClose, onSubmit }) {
       setProduct("");
       setCategory("Electronics");
       setUnits(1);
-      setPrice(0);
+      setPrice("0");
       setSaleDate("");
     }
   }, [open]);
@@ -47,17 +47,24 @@ export default function FormCard({ open, onClose, onSubmit }) {
     if (!cleanProduct) return;
 
     if (!isValidDate(saleDate)) {
-        alert("Please enter a valid date (DD/MM/YYYY)");
-        return;
-      }
+      alert("Please enter a valid date (DD-MM-YYYY)");
+      return;
+    }
+
+    const cleanCategory = category.trim();
+    if (!cleanCategory) return;
+
+    const priceNum = Number(String(price).replace(",", "."));
+    if (!Number.isFinite(priceNum) || priceNum < 0) return;
+
     // Create a new sale row object
     const newRow = {
       id: Date.now(),
       date: saleDate,
       product: cleanProduct,
-      category,
+      category: cleanCategory,
       units: Number(units),
-      price: Number(price),
+      price: priceNum,
     };
 
     onSubmit(newRow); // send to dashboard
@@ -146,15 +153,18 @@ export default function FormCard({ open, onClose, onSubmit }) {
             <label className="mb-2 block text-sm font-semibold text-slate-700">
               Category
             </label>
-            <select
+            <input
               value={category}
               onChange={(e) => setCategory(e.target.value)}
+              placeholder="e.g., Electronics"
+              list="category-suggestions"
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-slate-400"
-            >
-              <option value="Electronics">Electronics</option>
-              <option value="Stationery">Stationery</option>
-              <option value="Furniture">Furniture</option>
-            </select>
+            />
+            <datalist id="category-suggestions">
+              <option value="Electronics" />
+              <option value="Stationery" />
+              <option value="Furniture" />
+            </datalist>
           </div>
 
           {/* Units */}
@@ -177,14 +187,18 @@ export default function FormCard({ open, onClose, onSubmit }) {
               Price
             </label>
             <input
-              type="number"
-              min={0}
-              step="0.01"
+              type="text"
+              inputMode="decimal"
+              placeholder="0.00"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => {
+                // allow digits, one dot, and optional comma (we normalize on submit)
+                const next = e.target.value.replace(/[^\d.,]/g, "");
+                setPrice(next);
+              }}
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-slate-400"
             />
-          </div>
+            </div>
 
           {/* Buttons */}
           <div className="md:col-span-12 flex justify-end gap-2 pt-2">
@@ -211,5 +225,4 @@ export default function FormCard({ open, onClose, onSubmit }) {
       </div>
     </div>
   );
-}
-
+};

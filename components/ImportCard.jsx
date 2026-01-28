@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 
 export default function ImportCard({ open, onClose, onImport }) {
   const [isDragging, setIsDragging] = useState(false);
@@ -272,19 +273,7 @@ export default function ImportCard({ open, onClose, onImport }) {
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3">
-                <svg
-                  className="h-12 w-12 text-slate-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  />
-                </svg>
+                <Image src={'/upload-icon.svg'} width={50} height={30} alt="upload"/>
                 <div>
                   <p className="text-sm font-semibold text-slate-900">
                     Drop your CSV file here
