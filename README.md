@@ -4,7 +4,7 @@ A simple, business-focused sales dashboard designed to help teams move away from
 
 This project focuses on clarity, usability, and real-world workflows, rather than complex enterprise features.
 
-
+---
 
 ✨ Overview
 
@@ -21,7 +21,7 @@ This Sales Dashboard provides a clean interface to:
 - Analyze trends without manual formulas
 
 
-
+---
 
 🚀 Features
 
@@ -70,7 +70,7 @@ Esc → Close active modal
 Consistent DD-MM-YYYY format for easier scanning
 
 
-
+---
 
 🎯 Project Goal
 
@@ -87,7 +87,7 @@ Key principles:
 - Keep the interface simple and fast
 
 
-
+---
 
 🧠 Target Users
 
@@ -98,7 +98,7 @@ Key principles:
 - Anyone who wants basic sales insights without complexity
 
 
-
+---
 
 🛠 Tech Stack
 
@@ -111,7 +111,7 @@ Charts: Chart.js / Recharts
 Deployment: Vercel
 
 
-
+---
 
 📦 Current Status
 
@@ -126,7 +126,7 @@ Remaining work focuses on:
 - Feedback-based improvements
 
 
-
+---
 
 🔗 Live Demo
 
@@ -134,7 +134,7 @@ Remaining work focuses on:
 https://dashboard-coral-alpha-57.vercel.app/ 
 
 
-
+---
 
 💬 Feedback
 
@@ -151,7 +151,7 @@ If you:
 
 Feel free to open an issue or reach out.
 
-
+---
 
 📌 Notes
 
