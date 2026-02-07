@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import FormCard from "@/components/FormCard"
 import ImportCard from "@/components/ImportCard"
 import ChartsSection from "@/components/ChartsSection"
+import SalesInsightsCard from "@/components/SalesInsightsCard"
 import Image from "next/image";
 
 const salesData = [
@@ -164,6 +165,9 @@ export default function App() {
 
         {/* Charts */}
         <ChartsSection rows={finalRows} />
+
+        {/* Sales Insights */}
+        <SalesInsightsCard rows={finalRows} />
 
         {/* Controls */}
         <div className="mt-6 grid gap-3 rounded-2xl border bg-white p-4 shadow-sm sm:grid-cols-3">
